@@ -2,9 +2,10 @@ const db = require("../models");
 const User = db.user;
 
 checkDuplicateEmail = (req, res, next) => {
-        // Email
+
         User.findOne({
             email: req.body.email
+            
         }).exec((err, email) => {
             if (err) {
                 res.status(500).send({ message: err });
