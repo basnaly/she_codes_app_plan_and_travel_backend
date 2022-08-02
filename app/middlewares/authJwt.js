@@ -1,7 +1,5 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config"); // to bcript password 
-const db = require("../models");
-const User = db.user;
 
 verifyToken = (req, res, next) => {
 	let token = req.headers["x-access-token"];
@@ -13,13 +11,13 @@ verifyToken = (req, res, next) => {
 			return res.status(401).send({ message: "Unauthorized!" });
 		}
 		req.userId = decoded.id;
+		req.email = decoded.email;
 		next()
 	});
 };
 
 const authJwt = {
-	verifyToken,
-	
+	verifyToken,	
 };
 
 module.exports = authJwt;
