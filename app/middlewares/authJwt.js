@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config"); // to bcript password 
 
 verifyToken = (req, res, next) => {
-	let token = req.headers["x-access-token"];
+	let token = req.headers["x-access-token"]; //verify token from request header
 	if (!token) {
 		return res.status(403).send({ message: "No token provided!" });
 	}
@@ -10,8 +10,8 @@ verifyToken = (req, res, next) => {
 		if (err) {
 			return res.status(401).send({ message: "Unauthorized!" });
 		}
-		req.userId = decoded.id;
-		req.email = decoded.email;
+		req.userId = decoded.id;   // save userId
+		req.email = decoded.email;  // and email from decoded {} to request
 		next()
 	});
 };

@@ -22,7 +22,7 @@ exports.register = (req, res) => {
 			config.secret,
 			{
 				expiresIn: 86400, //24 hours
-			}
+			} 
 		);
 
 		res.status(200).send({
@@ -35,8 +35,10 @@ exports.register = (req, res) => {
 };
 
 exports.login = (req, res) => {
+
 	User.findOne({
 		email: req.body.email,
+		
 	}).exec((err, user) => {
 		if (err) {
 			res.status(500).send({ message: err });
