@@ -6,10 +6,10 @@ exports.createNewTrip = async (req, res) => {
     try {
         const trip = new Trip({
             ...req.body.trip,
-            createUser: req.userId,
+            createUser: req.userId, 
         });
 
-        const createNewTrip = await trip.save();
+        const result = await trip.save();
 
             res.status(200).send({
                 message: "The trip was created!",
@@ -24,11 +24,11 @@ exports.createNewTrip = async (req, res) => {
 exports.getListTrips = async (req, res) => {
 
     try {
-        const listTrips = await Trip.find({ // query to mongo, find all trips of user
+        const result = await Trip.find({ // query to mongo, find all trips of user
             createUser: req.userId //createUser is from model, req.userId is from authJwt
         }).select('_id city').exec() // select columns from trip model
 
-        let mappedListTrips = listTrips.map(el => { // change _id to id
+        let mappedListTrips = result.map(el => { // change _id to id
             return {
                 id: el._id,
                 city: el.city 
@@ -48,15 +48,16 @@ exports.getListTrips = async (req, res) => {
 exports.deleteTrip = async (req, res) => {
 
     try {
-        const deleteTrip = await Trip.deleteOne({
+        const result = await Trip.deleteOne({
             _id: req.query.tripId, // request: query: tripId from client
             createUser: req.userId
         })
 
-        console.log(deleteTrip)
+        console.log(result)
 
-        if (deleteTrip.deletedCount === 1) {
-            res.status(200).send('The trip was successefully deleted!')
+        if (result.deletedCount === 1) {
+            res.status(200).send({
+                message: 'The trip was succesefully deleted!'})
         } else {
             res.status(500).send('Nothing was deleted')
         }
@@ -67,3 +68,48 @@ exports.deleteTrip = async (req, res) => {
     } 
 }
 
+exports.getTripData = async (req, res) => {
+
+    try {
+        const result = await Trip.findOne({
+            _id: req.query.tripId,
+            createUser: req.userId 
+        }).select("-_id -__v -createUser")
+        
+        res.status(200).send({
+			trip: result,
+		});
+    }
+
+    catch(e) {
+        res.status(500).end('Error to recieve trip data' + e)
+    }
+}
+
+exports.updateTripData = async (req, res) => {
+    try {
+        const result = await Trip.updateOne(
+        {
+            _id: req.query.tripId,
+            createUser: req.userId
+        }, 
+        {
+            ...req.body.trip,
+            createUser: req.userId,
+        }) // rewrite createUser to avoid hacking
+
+        if (result.modifiedCount === 1) {
+            res.status(200).send({
+                message: 'Trip was updated!'
+            })
+        } else {
+            res.status(400).send({
+                message: 'Nothing was updated'
+            })
+        }    
+    }
+
+    catch(e) {
+        res.status(500).end('Error to update trip data' + e)
+    }
+}

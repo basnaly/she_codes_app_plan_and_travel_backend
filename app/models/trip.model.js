@@ -7,13 +7,13 @@ const Trip = mongoose.model(
             ref: "User"
         },
         city: String,
-        accomodations: [
+        accommodations: [
             {
-                accomodation: String,
+                accommodation: String,
                 currency: String,
                 dateFrom: Date,
                 dateTo: Date,
-                id: mongoose.Schema.Types.ObjectId,
+                id: Number,
                 notes: String,
                 price: Number,
             }
@@ -21,31 +21,29 @@ const Trip = mongoose.model(
         comments: [
             {
                 comment: String,
-                id: mongoose.Schema.Types.ObjectId,
+                id: Number,
             }
         ],
         expences: [
             {
                 currency: String,
                 date: Date,
-                id: mongoose.Schema.Types.ObjectId,
+                id: Number,
                 notes: String,
                 payment: String,
                 price: Number,
                 product: String,
             }
         ],
-        period: [
-            {
+        period: {
                 from: Date,
                 to: Date,
-            }
-        ],
+            },
         preparations: [
             {
                 category: String,
                 checked: Boolean,
-                id: mongoose.Schema.Types.ObjectId,
+                id: Number,
                 index: Number,
                 note: String,
             }
@@ -54,7 +52,7 @@ const Trip = mongoose.model(
             {
                 currency: String,
                 date: Date,
-                id: mongoose.Schema.Types.ObjectId,
+                id: Number,
                 notes: String,
                 price: Number,
                 transport: String,
@@ -63,7 +61,7 @@ const Trip = mongoose.model(
         visitings: [
             {
                 date: Date,
-                id: mongoose.Schema.Types.ObjectId,
+                id: Number,
                 notes: String,
                 visit: String,
             }

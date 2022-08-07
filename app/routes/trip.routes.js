@@ -15,4 +15,8 @@ module.exports = function (app) {
 	app.get("/api/trip/list-trips", verifyToken, controller.getListTrips);
 
 	app.delete("/api/trip/delete-trip", verifyToken, controller.deleteTrip);
+
+	app.get("/api/trip/trip-data", verifyToken, controller.getTripData);
+
+	app.post("/api/trip/trip-data", verifyToken, controller.updateTripData);
 };
