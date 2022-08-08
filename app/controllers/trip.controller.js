@@ -57,9 +57,9 @@ exports.deleteTrip = async (req, res) => {
 
         if (result.deletedCount === 1) {
             res.status(200).send({
-                message: 'The trip was succesefully deleted!'})
+                message: 'The trip was deleted!'})
         } else {
-            res.status(500).send('Nothing was deleted')
+            res.status(500).send('Nothing was deleted!')
         }
     }
 
@@ -82,7 +82,7 @@ exports.getTripData = async (req, res) => {
     }
 
     catch(e) {
-        res.status(500).end('Error to recieve trip data' + e)
+        res.status(500).end('Error to retrieve trip data' + e)
     }
 }
 
@@ -104,7 +104,7 @@ exports.updateTripData = async (req, res) => {
             })
         } else {
             res.status(400).send({
-                message: 'Nothing was updated'
+                message: 'Nothing was updated!'
             })
         }    
     }

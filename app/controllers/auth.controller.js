@@ -5,24 +5,21 @@ const User = db.user;
 let jwt = require("jsonwebtoken");
 let bcrypt = require("bcryptjs");
 
-exports.register = (req, res) => {
-	const user = new User({
-		email: req.body.email,
-		password: bcrypt.hashSync(req.body.password, 8),
-	});
+exports.register = async (req, res) => {
+	try {
+		const user = new User({
+			email: req.body.email,
+			password: bcrypt.hashSync(req.body.password, 8),
+		});
 
-	user.save((err, user) => {
-		if (err) {
-			res.status(500).send({ message: err });
-			return;
-		}
+		const result = await user.save();
 
 		let token = jwt.sign(
 			{ id: user.id, email: user.email },
 			config.secret,
 			{
 				expiresIn: 86400, //24 hours
-			} 
+			}
 		);
 
 		res.status(200).send({
@@ -31,19 +28,18 @@ exports.register = (req, res) => {
 			accessToken: token,
 			message: "You registered!",
 		});
-	});
+
+	} catch (e) {
+		res.status(500).send({ message: err });
+	}
 };
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
+	try {
+		const user = await User.findOne({
+			email: req.body.email,
+		}).exec();
 
-	User.findOne({
-		email: req.body.email,
-		
-	}).exec((err, user) => {
-		if (err) {
-			res.status(500).send({ message: err });
-			return;
-		}
 		if (!user) {
 			return res.status(404).send({ message: "User not found" });
 		}
@@ -73,7 +69,10 @@ exports.login = (req, res) => {
 			email: user.email,
 			accessToken: token,
 		});
-	});
+		
+	} catch (e) {
+		res.status(500).send({ message: err });
+	}
 };
 
 exports.sendUserEmail = (req, res) => {
