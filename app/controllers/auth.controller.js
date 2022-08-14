@@ -8,6 +8,7 @@ let bcrypt = require("bcryptjs");
 exports.register = async (req, res) => {
 	try {
 		const user = new User({
+			username: req.body.username,
 			email: req.body.email,
 			password: bcrypt.hashSync(req.body.password, 8),
 		});
@@ -15,7 +16,7 @@ exports.register = async (req, res) => {
 		const result = await user.save();
 
 		let token = jwt.sign(
-			{ id: user.id, email: user.email },
+			{ id: user.id, username: user.username, email: user.email },
 			config.secret,
 			{
 				expiresIn: 86400, //24 hours
@@ -24,13 +25,15 @@ exports.register = async (req, res) => {
 
 		res.status(200).send({
 			id: user._id,
+			username: user.username,
 			email: user.email,
 			accessToken: token,
 			message: "You registered!",
 		});
 
 	} catch (e) {
-		res.status(500).send({ message: err });
+		console.log(e)
+		res.status(500).send({ message: e });
 	}
 };
 
@@ -57,19 +60,21 @@ exports.login = async (req, res) => {
 		}
 
 		let token = jwt.sign(
-			{ id: user.id, email: user.email },
+			{ id: user.id, username: user.username, email: user.email },
 			config.secret,
 			{
 				expiresIn: 86400, //24 hours
 			}
+
 		);
 
 		res.status(200).send({
 			id: user._id,
+			username: user.username,
 			email: user.email,
 			accessToken: token,
 		});
-		
+
 	} catch (e) {
 		res.status(500).send({ message: err });
 	}
@@ -78,6 +83,7 @@ exports.login = async (req, res) => {
 exports.sendUserEmail = (req, res) => {
 	res.status(200).send({
 		id: req.userId,
+		username: req.username,
 		email: req.email,
 	});
 };

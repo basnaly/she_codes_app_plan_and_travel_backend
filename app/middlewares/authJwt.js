@@ -11,6 +11,7 @@ verifyToken = (req, res, next) => {
 			return res.status(401).send({ message: "You should login again!" });
 		}
 		req.userId = decoded.id;   // save userId
+		req.username = decoded.username;
 		req.email = decoded.email;  // and email from decoded {} to request
 		next()
 	});
