@@ -16,8 +16,8 @@ exports.createNewTrip = async (req, res) => {
             });
         }
 
-    catch(e) {
-        res.status(500).end('Error to create new trip ' + e)
+    catch(error) {
+        res.status(500).send({ message: "Something went wrong" });
     }   
 }
 
@@ -40,8 +40,8 @@ exports.getListTrips = async (req, res) => {
 		});
     }
     
-    catch(e) {
-        res.status(500).end('Error to retrieve list trips ' + e)
+    catch(error) {
+        res.status(500).send({ message: "Something went wrong" });
     }
 }
 
@@ -63,8 +63,8 @@ exports.deleteTrip = async (req, res) => {
         }
     }
 
-    catch(e) {
-        res.status(500).end('Error to delete the trip ' + e)
+    catch(error) {
+		res.status(500).send({ message: "Something went wrong" });
     } 
 }
 
@@ -81,8 +81,8 @@ exports.getTripData = async (req, res) => {
 		});
     }
 
-    catch(e) {
-        res.status(500).end('Error to retrieve trip data' + e)
+    catch(error) {
+		res.status(500).send({ message: "Something went wrong" });
     }
 }
 
@@ -109,7 +109,26 @@ exports.updateTripData = async (req, res) => {
         }    
     }
 
-    catch(e) {
-        res.status(500).end('Error to update trip data' + e)
+    catch(error) {
+        res.status(500).send({ message: "Something went wrong" });
     }
+}
+
+exports.deleteData = async (req, res) => {
+
+    try {
+        const result = await Trip.deleteMany({
+            createUser: req.userId
+        })
+
+        console.log(result)
+
+        res.status(200).send({
+                message: 'Account was deleted!'
+        })     
+    }
+
+    catch(error) {
+        res.status(500).send({ message: "Something went wrong" });
+    } 
 }

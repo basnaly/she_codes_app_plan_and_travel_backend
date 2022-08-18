@@ -31,9 +31,9 @@ exports.register = async (req, res) => {
 			message: "You registered!",
 		});
 
-	} catch (e) {
-		console.log(e)
-		res.status(500).send({ message: e });
+	} catch (error) {
+		console.log(error)
+		res.status(500).send({ message: "Something went wrong" });
 	}
 };
 
@@ -75,8 +75,8 @@ exports.login = async (req, res) => {
 			accessToken: token,
 		});
 
-	} catch (e) {
-		res.status(500).send({ message: err });
+	} catch (error) {
+		res.status(500).send({ message: "Something went wrong" });
 	}
 };
 
@@ -86,4 +86,50 @@ exports.sendUserEmail = (req, res) => {
 		username: req.username,
 		email: req.email,
 	});
+};
+
+exports.changePassword = async (req, res) => {
+
+	try {
+		const result = await User.updateOne(
+			{
+				_id: req.userId
+			},
+			{
+				password: bcrypt.hashSync(req.body.password, 8),
+			})
+
+		if (result.modifiedCount === 1) {
+			res.status(200).send({
+				message: 'The password was updated!'
+			})
+		} else {
+			res.status(400).send({
+				message: 'Nothing was updated!'
+			})
+		}   
+	} 
+	catch (error) {
+		res.status(500).send({ message: "Something went wrong" });
+	}
+};
+
+exports.deleteAccount = async (req, res, next) => {
+
+	try {
+
+		const result = await User.deleteOne({
+			_id: req.userId
+		})
+
+		if (result.deletedCount === 1) {
+            next()
+        } else {
+            res.status(500).send({message: 'User was not deleted!'})
+        }
+
+	} catch(error) {
+		console.log(error);
+		res.status(500).send({ message: "Something went wrong" });
+	}
 };

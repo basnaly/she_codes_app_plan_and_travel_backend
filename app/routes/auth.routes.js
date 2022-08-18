@@ -1,6 +1,8 @@
 const { verifyRegister: verifyRegister } = require("../middlewares");
 const controller = require("../controllers/auth.controller");
 const { verifyToken } = require("../middlewares/authJwt");
+const { validateOldPassword } = require("../middlewares/verifyPassword");
+const tripController = require("../controllers/trip.controller");
 
 module.exports = function(app) {
     app.use(function(req, res, next) {
@@ -27,4 +29,17 @@ module.exports = function(app) {
         verifyToken, 
         controller.sendUserEmail
     );
+
+    app.post("/api/auth/change-password",
+        verifyToken,
+        validateOldPassword,
+        verifyRegister.validatePassword,
+        controller.changePassword
+    );
+
+    app.delete("/api/auth/delete-account",
+        verifyToken,
+        controller.deleteAccount,
+        tripController.deleteData
+    )
 };

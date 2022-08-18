@@ -1,24 +1,6 @@
 const db = require("../models");
 const User = db.user;
 
-checkDuplicateEmail = (req, res, next) => {
-
-        User.findOne({
-            email: req.body.email
-            
-        }).exec((err, email) => {
-            if (err) {
-                res.status(500).send({ message: err });
-                return
-            }
-            if (email) {
-                res.status(400).send({ message: "Failed! Email is already in use!" })
-                return
-            }
-            next();
-        });
-};
-
 validatePassword = (req, res, next) => {
     let password = req.body.password;
     const validationError = 'The password must contain lower and upper case letters, numbers and symbols, 8-12 letters';
@@ -29,6 +11,24 @@ validatePassword = (req, res, next) => {
         return
     }
     next();
+};
+
+checkDuplicateEmail = async (req, res, next) => {
+
+    try {
+        const result = await User.findOne({
+            email: req.body.email    
+        }).exec()
+
+        if (result) {
+            res.status(400).send({ message: "Failed! Email is already in use!" })
+            return
+        }
+        next();
+
+    } catch(error) {
+		res.status(500).send({ message: "Something went wrong" });
+    }
 };
 
 const verifyRegister = {
