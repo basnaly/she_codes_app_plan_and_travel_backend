@@ -26,12 +26,27 @@ exports.getListTrips = async (req, res) => {
     try {
         const result = await Trip.find({ // query to mongo, find all trips of user
             createUser: req.userId //createUser is from model, req.userId is from authJwt
-        }).select('_id city').exec() // select columns from trip model
+        }).select('_id city period').exec() // select columns from trip model
+        console.log(result)
 
         let mappedListTrips = result.map(el => { // change _id to id
+
+            let period = 'current';
+
+            let today = new Date()
+            let startTrip = new Date(el.period.from)
+            let endTrip = new Date(el.period.to)
+
+            if (today.getTime() > endTrip.getTime()) {
+                period = 'past'
+            }
+            else if (today.getTime() < startTrip.getTime()) {
+                period = 'future'
+            }
             return {
                 id: el._id,
-                city: el.city 
+                city: el.city,
+                period,
             }
         })
 
