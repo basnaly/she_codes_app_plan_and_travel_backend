@@ -19,7 +19,7 @@ exports.register = async (req, res) => {
 			{ id: user.id, username: user.username, email: user.email },
 			config.secret,
 			{
-				expiresIn: 86400, //24 hours
+				expiresIn: 172800, // 48 hours
 			}
 		);
 

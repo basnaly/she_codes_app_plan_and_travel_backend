@@ -31,17 +31,17 @@ exports.getListTrips = async (req, res) => {
 
         let mappedListTrips = result.map(el => { // change _id to id
 
-            let period = 'current';
+            let period = 'Current';
 
             let today = new Date()
             let startTrip = new Date(el.period.from)
             let endTrip = new Date(el.period.to)
 
             if (today.getTime() > endTrip.getTime()) {
-                period = 'past'
+                period = 'Past'
             }
             else if (today.getTime() < startTrip.getTime()) {
-                period = 'future'
+                period = 'Future'
             }
             return {
                 id: el._id,
