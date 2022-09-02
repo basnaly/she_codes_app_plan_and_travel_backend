@@ -1,6 +1,9 @@
 const db = require("../models");
 const Trip = db.trip;
 
+const months = ["January", "February", "March", "April", "May", "June", 
+    "July", "August", "September", "October", "November", "December"];
+
 exports.createNewTrip = async (req, res) => {
 
     try {
@@ -43,10 +46,14 @@ exports.getListTrips = async (req, res) => {
             else if (today.getTime() < startTrip.getTime()) {
                 period = 'Future'
             }
+
+            let startingTrip = months[el.period.from.getMonth()] + ' ' + el.period.from.getFullYear();
+
             return {
                 id: el._id,
                 city: el.city,
                 period,
+                startingTrip
             }
         })
 
