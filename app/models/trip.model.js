@@ -7,6 +7,7 @@ const Trip = mongoose.model(
             ref: "User"
         },
         city: String,
+        country: String,
         accommodations: [
             {
                 accommodation: String,

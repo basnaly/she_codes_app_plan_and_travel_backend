@@ -29,7 +29,7 @@ exports.getListTrips = async (req, res) => {
     try {
         const result = await Trip.find({ // query to mongo, find all trips of user
             createUser: req.userId //createUser is from model, req.userId is from authJwt
-        }).select('_id city period').exec() // select columns from trip model
+        }).select('_id city country period').exec() // select columns from trip model
         console.log(result)
 
         let mappedListTrips = result.map(el => { // change _id to id
@@ -52,6 +52,7 @@ exports.getListTrips = async (req, res) => {
             return {
                 id: el._id,
                 city: el.city,
+                country: el.country,
                 period,
                 startingTrip
             }
