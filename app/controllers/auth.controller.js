@@ -4,8 +4,10 @@ const User = db.user;
 
 let jwt = require("jsonwebtoken");
 let bcrypt = require("bcryptjs");
+const ContactForm = require("../models/contactForm.model");
 
 exports.register = async (req, res) => {
+
 	try {
 		const user = new User({
 			username: req.body.username,
@@ -38,6 +40,7 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
+
 	try {
 		const user = await User.findOne({
 			email: req.body.email,
@@ -130,6 +133,29 @@ exports.deleteAccount = async (req, res, next) => {
 
 	} catch(error) {
 		console.log(error);
+		res.status(500).send({ message: "Something went wrong" });
+	}
+};
+
+exports.saveContactForm = async (req, res) => {
+
+	try {
+		const contactForm = new ContactForm({
+			name: req.body.username,
+			email: req.body.email,
+			subject: req.body.subject,
+			textarea: req.body.textarea,
+			date: new Date(),
+		});
+		
+		const result = await contactForm.save();
+
+		res.status(200).send({
+			message: "Your form has been sent!",
+		});
+
+	} catch (error) {
+		console.log(error)
 		res.status(500).send({ message: "Something went wrong" });
 	}
 };

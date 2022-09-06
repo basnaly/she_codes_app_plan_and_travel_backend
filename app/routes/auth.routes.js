@@ -41,5 +41,9 @@ module.exports = function(app) {
         verifyToken,
         controller.deleteAccount,
         tripController.deleteData
-    )
+    );
+
+    app.post("/api/auth/save-contact-form",
+        controller.saveContactForm
+    );
 };
