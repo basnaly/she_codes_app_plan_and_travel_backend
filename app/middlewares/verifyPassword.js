@@ -17,7 +17,7 @@ exports.validateOldPassword = async (req, res, next) => {
 		}
 
 		let passwordIsValid = bcrypt.compareSync(
-			req.body.oldPassword, // from UI
+			req.body.oldPassword, // from UI (body)
 			user.password
 		);
 

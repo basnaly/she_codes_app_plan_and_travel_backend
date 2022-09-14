@@ -28,11 +28,10 @@ exports.getListTrips = async (req, res) => {
 
     try {
         const result = await Trip.find({ // query to mongo, find all trips of user
-            createUser: req.userId //createUser is from model, req.userId is from authJwt
+            createUser: req.userId 
         }).select('_id city country period').exec() // select columns from trip model
-        console.log(result)
-
-        let mappedListTrips = result.map(el => { // change _id to id
+        
+        let mappedListTrips = result.map(el => { 
 
             let period = 'Current';
 
@@ -50,7 +49,7 @@ exports.getListTrips = async (req, res) => {
             let startingTrip = months[el.period.from.getMonth()] + ' ' + el.period.from.getFullYear();
 
             return {
-                id: el._id,
+                id: el._id, // change _id to id
                 city: el.city,
                 country: el.country,
                 period,
@@ -72,7 +71,7 @@ exports.deleteTrip = async (req, res) => {
 
     try {
         const result = await Trip.deleteOne({
-            _id: req.query.tripId, // request: query: tripId from client
+            _id: req.query.tripId, 
             createUser: req.userId
         })
 
@@ -117,10 +116,10 @@ exports.updateTripData = async (req, res) => {
             createUser: req.userId
         }, 
         {
-            ...req.body.trip,
-            createUser: req.userId,
-        }) // rewrite createUser to avoid hacking
-
+            ...req.body.trip, // createUser may be here
+            createUser: req.userId, // rewrite createUser to avoid hacking
+        }) 
+        
         if (result.modifiedCount === 1) {
             res.status(200).send({
                 message: 'Trip was updated!'
